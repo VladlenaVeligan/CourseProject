@@ -8,19 +8,15 @@ def parse(your_URL):
 	}
     
     s = requests.Session()
-    
-    kurs = []
 
     response = s.get(your_URL, headers = HEADERS) 
     soup = BeautifulSoup(response.content, 'html.parser')
-    values = soup.find_all('div', attrs={'class' : 'birzha_info_head_rates'})
-    
-    for value in values:
-        kurs.append(value.get_text().strip())
+    values = soup.find('div', attrs={'class' : 'birzha_info_head_rates'})
+    values = values.get_text().strip()
 
     birzha_time = soup.find('td', attrs={'class' : 'birzha_time'}) 
     birzha_time = birzha_time.get_text().strip().replace('Время последнего обновления', '')  
-
-    return 'Курс биткоина на время ' + birzha_time + ' составляет ' + kurs[0]
+ 
+    return 'Курс биткоина на время ' + birzha_time + ' составляет ' + values
 
 print(parse('https://myfin.by/crypto-rates/bitcoin'))
