@@ -1,5 +1,5 @@
-from typing import ValuesView
 from bs4 import BeautifulSoup
+import csv
 import requests 
 
 def parse(your_URL):
@@ -16,7 +16,15 @@ def parse(your_URL):
 
     birzha_time = soup.find('td', attrs={'class' : 'birzha_time'}) 
     birzha_time = birzha_time.get_text().strip().replace('Время последнего обновления', '')  
- 
-    return 'Курс биткоина на время ' + birzha_time + ' составляет ' + values
 
+    try:   
+        with open('data.csv', 'a', newline='') as file:
+            writer =  csv.writer(file)
+            writer.writerow([birzha_time, values])
+            return 'Operation completed successfully!'
+    except:
+        return 'Error!!!'
+
+
+    
 print(parse('https://myfin.by/crypto-rates/bitcoin'))
